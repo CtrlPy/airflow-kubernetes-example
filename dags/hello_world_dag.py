@@ -4,6 +4,9 @@ from airflow.operators.python import PythonOperator
 from datetime import datetime
 
 
+print("Hello, DAG!")
+
+
 def hello_world():
     print("Hello, world!")
 
