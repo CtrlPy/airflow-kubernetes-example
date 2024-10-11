@@ -8,11 +8,10 @@ def hello_world():
     print("Hello, world!")
 
 
-# Визначаємо DAG
 with DAG(
     dag_id="hello_world_dag",
-    start_date=datetime(2023, 1, 1),  # Вкажи дату початку
-    schedule_interval="@daily",  # Виконання DAG щодня
+    start_date=datetime(2023, 1, 1),
+    schedule_interval="@daily",
     catchup=False,
 ) as dag:
     start = DummyOperator(task_id="start")
@@ -21,5 +20,4 @@ with DAG(
 
     end = DummyOperator(task_id="end")
 
-    # Послідовність завдань
     start >> hello_task >> end

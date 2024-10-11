@@ -9,8 +9,9 @@ flower:
 dags:
   gitSync:
     enabled: true
-    repo: "https://github.com/CtrlPy/airflow-kubernetes-example.git"
-    branch: "main"
+    repo: https://github.com/CtrlPy/airflow-kubernetes-example.git
+    branch: main
+    subPath: dags
     wait: 20  # Synchronization interval in seconds
 
 webserver:
@@ -40,3 +41,11 @@ users:
   - username: admin
     password: admin  
     role: Admin
+
+workers:
+  persistence:
+    enabled: true  # Включаємо персистентне зберігання логів
+    size: 10Gi  # Встановлюємо розмір для сховища логів
+  env:
+    - name: AIRFLOW__LOGGING__BASE_LOG_FOLDER
+      value: /opt/airflow/logs  # Вказуємо шлях для збереження логів
