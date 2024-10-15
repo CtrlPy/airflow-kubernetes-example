@@ -49,3 +49,20 @@ workers:
   env:
     - name: AIRFLOW__LOGGING__BASE_LOG_FOLDER
       value: /opt/airflow/logs  # Вказуємо шлях для збереження логів
+  extraVolumeMounts:
+    - name: data-storage
+      mountPath: /opt/airflow/storage
+  extraVolumes:
+    - name: data-storage
+      persistentVolumeClaim:
+        claimName: data-storage-pvc
+
+persistence:
+  dataStorage:
+    enabled: true
+    existingClaim: ""
+    storageClass: "standard"  # Замініть на ваш клас сховища
+    accessMode: ReadWriteMany
+    size: 10Gi
+    annotations: {}
+    labels: {}
