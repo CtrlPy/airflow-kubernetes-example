@@ -3,8 +3,6 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from datetime import datetime
 import os
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 
 # Default arguments for the DAG
 default_args = {
@@ -21,7 +19,7 @@ with DAG(
     schedule_interval=None,
     catchup=False,
 ) as dag:
-    # Function to generate PDF files
+    # Function to generate dummy PDF files
     def generate_pdfs(**kwargs):
         local_dir = "/opt/airflow/storage/generated_pdfs/"
         if not os.path.exists(local_dir):
@@ -31,10 +29,36 @@ with DAG(
             file_name = f"file_{i}.pdf"
             file_path = os.path.join(local_dir, file_name)
 
-            # Generate PDF file
-            c = canvas.Canvas(file_path, pagesize=letter)
-            c.drawString(100, 750, f"This is PDF file number {i}")
-            c.save()
+            # Generate a dummy PDF file by writing minimal PDF content
+            with open(file_path, "wb") as f:
+                # Write minimal PDF header
+                f.write(
+                    b"%PDF-1.4\n1 0 obj\n<<\n/Type /Catalog\n/Pages 2 0 R\n>>\nendobj\n"
+                )
+                f.write(
+                    b"2 0 obj\n<<\n/Type /Pages\n/Kids [3 0 R]\n/Count 1\n>>\nendobj\n"
+                )
+                f.write(
+                    b"3 0 obj\n<<\n/Type /Page\n/Parent 2 0 R\n/MediaBox [0 0 612 792]\n"
+                )
+                f.write(b"/Contents 4 0 R\n>>\nendobj\n")
+                f.write(
+                    b"4 0 obj\n<<\n/Length 44\n>>\nstream\nBT\n/F1 24 Tf\n100 700 Td\n"
+                )
+                f.write(f"({file_name}) Tj\nET\nendstream\nendobj\n")
+                f.write(
+                    b"5 0 obj\n<<\n/Type /Font\n/Subtype /Type1\n/Name /F1\n/BaseFont /Helvetica\n"
+                )
+                f.write(
+                    b">>\nendobj\nxref\n0 6\n0000000000 65535 f \n0000000010 00000 n \n"
+                )
+                f.write(
+                    b"0000000079 00000 n \n0000000178 00000 n \n0000000295 00000 n \n"
+                )
+                f.write(
+                    b"0000000410 00000 n \ntrailer\n<<\n/Size 6\n/Root 1 0 R\n>>\nstartxref\n"
+                )
+                f.write(b"522\n%%EOF\n")
 
             print(f"Generated file: {file_name}")
 
