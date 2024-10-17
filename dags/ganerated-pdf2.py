@@ -45,7 +45,11 @@ with DAG(
                 f.write(
                     b"4 0 obj\n<<\n/Length 44\n>>\nstream\nBT\n/F1 24 Tf\n100 700 Td\n"
                 )
-                f.write(f"({file_name}) Tj\nET\nendstream\nendobj\n")
+
+                # Encode the string to bytes before writing
+                line_content = f"({file_name}) Tj\nET\nendstream\nendobj\n"
+                f.write(line_content.encode("utf-8"))
+
                 f.write(
                     b"5 0 obj\n<<\n/Type /Font\n/Subtype /Type1\n/Name /F1\n/BaseFont /Helvetica\n"
                 )
