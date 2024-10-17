@@ -23,7 +23,7 @@ with DAG(
         s3 = S3Hook(aws_conn_id="aws_default")
 
         # Specify the bucket name (replace with your bucket name)
-        bucket_name = "pinnacle-medical-records"
+        bucket_name = "dag-test-pdf"
 
         # Get a list of all object keys in the bucket
         object_keys = s3.list_keys(bucket_name=bucket_name)
