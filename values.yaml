@@ -67,5 +67,6 @@ persistence:
     annotations: {}
     labels: {}
     
-extraPipPackages:
-  - reportlab==3.6.12
+airflow:
+  extraPipPackages:
+    - reportlab==3.6.12
