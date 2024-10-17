@@ -66,3 +66,6 @@ persistence:
     size: 10Gi
     annotations: {}
     labels: {}
+    
+extraPipPackages:
+  - reportlab==3.6.12
