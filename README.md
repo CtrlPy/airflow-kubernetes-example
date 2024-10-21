@@ -23,5 +23,4 @@ helm upgrade airflow apache-airflow/airflow -f values.yaml -n airflow
 
 
 ```
-Fernet Key: V1RsMnM2bkFqdTl0OE1wY3U1dUdXcHVNa0ozRzJkZmw=
 
