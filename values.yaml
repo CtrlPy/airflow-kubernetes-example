@@ -23,19 +23,13 @@ ingress:
   web:
     hosts:
       - airflow.local
-    annotations:
-      kubernetes.io/ingress.class: traefik
+    tls:  # Вимикаємо TLS для веб-сервера
+      enabled: false
   flower:
     hosts:
       - flower.airflow.local
-    annotations:
-      kubernetes.io/ingress.class: traefik
-
-  # If using TLS, uncomment and configure the following block
-  # tls:
-  #   - hosts:
-  #       - airflow.local
-  #     secretName: airflow-tls
+    tls:  # Вимикаємо TLS для Flower
+      enabled: false
 
 users:
   - username: admin
@@ -67,6 +61,3 @@ persistence:
     annotations: {}
     labels: {}
 
-airflow:
-  extraPipPackages:
-    - pdfminer.six==20221105
