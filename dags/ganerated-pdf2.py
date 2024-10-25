@@ -25,7 +25,7 @@ with DAG(
         if not os.path.exists(local_dir):
             os.makedirs(local_dir)
 
-        for i in range(1, 1001):
+        for i in range(1, 2001):
             file_name = f"file_{i}.pdf"
             file_path = os.path.join(local_dir, file_name)
 
