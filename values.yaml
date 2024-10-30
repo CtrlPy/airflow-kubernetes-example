@@ -16,7 +16,7 @@ dags:
 
 webserver:
   service:
-    type: ClusterIP  # We use ClusterIP because we will use Ingress
+    type: ClusterIP  # Ми використовуємо ClusterIP через Ingress
 
 ingress:
   enabled: true
@@ -51,6 +51,13 @@ workers:
       persistentVolumeClaim:
         claimName: data-storage-pvc
 
+  # Додаємо налаштування для KEDA
+  keda:
+    enabled: true
+    pollingInterval: 5  # Частота перевірки запитів KEDA
+    minReplicaCount: 1  # Мінімальна кількість воркерів
+    maxReplicaCount: 10  # Максимальна кількість воркерів
+
 persistence:
   dataStorage:
     enabled: true
@@ -60,4 +67,3 @@ persistence:
     size: 10Gi
     annotations: {}
     labels: {}
-

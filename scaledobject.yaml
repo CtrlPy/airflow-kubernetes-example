@@ -1,0 +1,17 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: airflow-worker
+  namespace: airflow
+spec:
+  scaleTargetRef:
+    name: airflow-worker
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  pollingInterval: 5
+  triggers:
+    - type: postgresql
+      metadata:
+        connectionFromEnv: AIRFLOW_CONN_AIRFLOW_DB
+        query: "SELECT ceil(COUNT(*)::decimal / 16) FROM task_instance WHERE (state='running' OR state='queued')"
+        targetQueryValue: "0.5"  # Змінюємо на менше значення

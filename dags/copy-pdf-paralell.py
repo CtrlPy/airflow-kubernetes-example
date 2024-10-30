@@ -10,20 +10,20 @@ default_args = {
     "retries": 1,
 }
 
-# Встановіть розмір пакету відповідно до ваших потреб
+# Set the batch size according to your requirements
 BATCH_SIZE = 500
 
 with DAG(
     "process_and_copy_pdf_files_batched",
     default_args=default_args,
-    description="DAG для обробки та копіювання PDF-файлів пакетами без зміни конфігурації Airflow",
+    description="DAG for processing and copying PDF files in batches without changing Airflow configuration",
     schedule_interval=None,
     catchup=False,
 ) as dag:
 
     @task
     def get_pdf_keys():
-        """Отримує список PDF-файлів з вихідного бакету."""
+        """Retrieves a list of PDF files from the source bucket."""
         s3 = S3Hook(aws_conn_id="aws_default")
         source_bucket = "dag-test-pdf"
         pdf_keys = s3.list_keys(bucket_name=source_bucket)
@@ -31,7 +31,7 @@ with DAG(
 
     @task
     def split_into_batches(pdf_keys):
-        """Розбиває список ключів на пакети."""
+        """Splits the list of keys into batches."""
         num_batches = math.ceil(len(pdf_keys) / BATCH_SIZE)
         return [
             pdf_keys[i * BATCH_SIZE : (i + 1) * BATCH_SIZE] for i in range(num_batches)
@@ -39,7 +39,7 @@ with DAG(
 
     @task(pool="pdf_processing_pool")
     def process_batch(batch):
-        """Обробляє пакет PDF-файлів."""
+        """Processes a batch of PDF files."""
         s3 = S3Hook(aws_conn_id="aws_default")
         source_bucket = "dag-test-pdf"
         target_bucket = "dag-processed-files"
@@ -47,14 +47,14 @@ with DAG(
 
         for pdf_key in batch:
             print(f"Processing {pdf_key}")
-            # Завантаження PDF-файлу
+            # Download PDF file
             obj = s3_conn.get_object(Bucket=source_bucket, Key=pdf_key)
             pdf_content = obj["Body"].read()
 
-            # Обробка PDF-файлу (додайте свій код обробки тут)
-            processed_content = pdf_content  # Поки що без змін
+            # Process the PDF file (add your processing code here)
+            processed_content = pdf_content  # No modifications for now
 
-            # Завантаження обробленого файлу в цільовий бакет
+            # Upload the processed file to the target bucket
             s3_conn.put_object(
                 Bucket=target_bucket, Key=pdf_key, Body=processed_content
             )
